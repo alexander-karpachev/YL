@@ -88,6 +88,13 @@ class Board:
                 for r in range(max(0, row-1), min(self.height, row+2))
                 if (r, c) != (row, col)]
 
+    def neighbours4(self, cell):
+        row, col = cell
+        return [
+            (min(self.height-1, row+1), col),
+            (max(0, row-1), col),
+            (row, min(self.width-1, col+1)),
+            (row, max(0, col-1))]
 
 
 class Lines(Board):
@@ -151,7 +158,6 @@ class Lines(Board):
         return color
 
     def has_path(self, x1, y1, x2, y2):
-        print(f'enter has_path, ', x1, y1, x2, y2)
         board = [r[:] for r in self.board]
         board[x1][y1] = -1
         found = False
@@ -172,14 +178,10 @@ class Lines(Board):
                 board[x][y] = v
             nn = []
             for c in n:
-                nn += [(x, y) for x, y in self.neighbours(c) if board[x][y] == 0]
+                nn += [(x, y) for x, y in self.neighbours4(c) if board[x][y] == 0]
             if len(nn) == 0:
                 break
             n = nn
-
-        print(f'out has_path, {found}, v={v}')
-        for r in board:
-            print(r)
         return found
 
 

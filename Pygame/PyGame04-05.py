@@ -88,6 +88,14 @@ class Board:
                 for r in range(max(0, row-1), min(self.height, row+2))
                 if (r, c) != (row, col)]
 
+    def neighbours4(self, cell):
+        row, col = cell
+        return [
+            (min(self.height-1, row+1), col),
+            (max(0, row-1), col),
+            (row, min(self.width-1, col+1)),
+            (row, max(0, col-1))]
+
 
 class Lines(Board):
 
@@ -171,7 +179,7 @@ class Lines(Board):
                 board[x][y] = v
             nn = []
             for c in n:
-                nn += [(x, y) for x, y in self.neighbours(c) if board[x][y] == 0]
+                nn += [(x, y) for x, y in self.neighbours4(c) if board[x][y] == 0]
             if len(nn) == 0:
                 break
             n = nn
@@ -181,7 +189,7 @@ class Lines(Board):
             while c2 != c1:
                 p.insert(0, c2)
                 v += 1
-                c2 = [(x, y) for x, y in self.neighbours(c2) if board[x][y] == v][0]
+                c2 = [(x, y) for x, y in self.neighbours4(c2) if board[x][y] == v][0]
             self.path = p
         return found
 
