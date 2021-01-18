@@ -60,7 +60,11 @@ class Board:
             return
         if not 0 <= col <= self.width - 1:
             return
-        self.board[row][col] = int(not self.board[row][col])
+        #self.board[row][col] = int(not self.board[row][col])
+        for i in self.neighbours4(cell):
+            r, c = cell
+            self.board[r][c] = int(not self.board[r][c])
+
 
     def get_cell(self, mouse_pos):
         x, y = mouse_pos
@@ -71,6 +75,22 @@ class Board:
     def get_cell_color(self, row, col):
         return GameColors.board_colors.value[self.board[row][col]]
 
+    def neighbours(self, cell):
+        row, col = cell
+        return [(r, c) for c in range(max(0, col-1), min(self.width, col+2))
+                for r in range(max(0, row-1), min(self.height, row+2))
+                if (r, c) != (row, col)]
+
+    def neighbours4(self, cell):
+        row, col = cell
+        return [
+            (min(self.height, row+1), col),
+            (max(0, row-1), col),
+            (row, min(self.width, col+1)),
+            (row, max(0, col-1))]
+        #return [(r, c) for c in range(max(0, col-1), min(self.width, col+2))
+        #        for r in range(max(0, row-1), min(self.height, row+2))
+        #        if (r, c) != (row, col)]
 
 def main():
     pygame.init()
