@@ -1,4 +1,5 @@
 import pygame, sys, os
+from pygame.locals import *
 
 
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
@@ -16,14 +17,14 @@ class Creature:
     def render(self, p_screen):
         p_screen.blit(self.image, (self.x, self.y))
 
-    def move(self, key):
-        if key == pygame.K_UP:
+    def move(self, keys):
+        if keys[K_UP]:
             self.y += -self.dy
-        if key == pygame.K_DOWN:
+        if keys[K_DOWN]:
             self.y += self.dy
-        if key == pygame.K_LEFT:
+        if keys[K_LEFT]:
             self.x += -self.dx
-        if key == pygame.K_RIGHT:
+        if keys[K_RIGHT]:
             self.x += self.dx
 
 def load_image(name, colorkey=0):
@@ -57,12 +58,11 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
                 break
-            if event.type == pygame.KEYDOWN:
-                hero.move(event.key)
             if not running:
                 break
         screen.fill(bg)
 
+        hero.move(pygame.key.get_pressed())
         hero.render(screen)
 
         clock.tick(FPS)
