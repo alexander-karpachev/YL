@@ -27,6 +27,7 @@ class Creature:
         if keys[K_RIGHT]:
             self.x += self.dx
 
+
 def load_image(name, colorkey=0):
     fullname = os.path.join('data', name)
     # если файл не существует, то выходим
