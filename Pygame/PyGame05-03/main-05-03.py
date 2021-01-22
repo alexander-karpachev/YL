@@ -3,41 +3,38 @@ from pygame.locals import *
 
 
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 900, 65
-FPS = 60
+FPS = 30
 DIR_DATA = 'data'
-CREATURE_FILE = 'car2.png'
+CAR_FILE = 'car2.png'
 
 
 class Car(pygame.sprite.Sprite):
-    def __init__(self, name):
-        super().__init__()
-        self.x = self.y = 0
-        self.image = load_image(name)
-        _, _, self.w, self.h = self.image.get_rect()
+    def __init__(self, group):
+        super().__init__(group)
+        self.image = load_image(CAR_FILE)
+        self.rect = self.image.get_rect()
         self.scale()
         self.images = list()
         self.images.append(self.image)
         self.images.append(pygame.transform.flip(self.image, True, False))
-        self.dx = self.dy = 10
         self.speed = 5
-        self.scale()
 
     def scale(self):
-        scale = float(WINDOW_HEIGHT) / float(self.h)
-        self.w, self.h = int(self.w*scale), int(self.h*scale)
-        self.image = pygame.transform.scale(self.image, (self.w, self.h))
+        _, _, w, h = self.rect
+        scale = float(WINDOW_HEIGHT) / float(h)
+        w, h = int(w * scale), int(h * scale)
+        self.image = pygame.transform.scale(self.image, (w, h))
+        self.rect = self.image.get_rect()
 
-    def render(self, p_screen):
-        p_screen.blit(self.image, (self.x, self.y))
-
-    def move(self, keys):
-        if self.x <= 0 and self.speed < 0:
+    def move(self):
+        x, _, w, _ = self.rect
+        if x <= 0 and self.speed < 0:
             self.speed = abs(self.speed)
             self.image = self.images[0]
-        if self.x >= WINDOW_WIDTH - self.w and self.speed > 0:
+        if x >= WINDOW_WIDTH - w and self.speed > 0:
             self.speed = -abs(self.speed)
             self.image = self.images[1]
-        self.x += self.speed
+        self.rect.x += self.speed
 
 
 def load_image(name, colorkey=0):
@@ -63,7 +60,8 @@ def main():
     screen = pygame.display.set_mode(WINDOW_SIZE)
     bg = pygame.Color('white')
 
-    hero = Car(CREATURE_FILE)
+    all_sprites = pygame.sprite.Group()
+    hero = Car(all_sprites)
 
     running = True
     while running:
@@ -75,8 +73,9 @@ def main():
                 break
         screen.fill(bg)
 
-        hero.move(pygame.key.get_pressed())
-        hero.render(screen)
+        hero.move()
+
+        all_sprites.draw(screen)
 
         clock.tick(FPS)
         pygame.display.flip()
