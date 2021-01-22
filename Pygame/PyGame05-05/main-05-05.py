@@ -3,8 +3,9 @@ import random
 import pygame, os, sys
 
 
-WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 500, 500
+WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 600, 300
 DATA_DIR = 'data'
+FPS = 60
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -27,36 +28,36 @@ def load_image(name, colorkey=None):
     return image
 
 
-class Bomb(pygame.sprite.Sprite):
-    image = load_image("bomb.png")
-    image_boom = load_image("boom.png")
-    w = h = 80
+class GameOver(pygame.sprite.Sprite):
+    image = load_image("gameover.png")
 
     def __init__(self, group):
         # НЕОБХОДИМО вызвать конструктор родительского класса Sprite.
         # Это очень важно !!!
         super().__init__(group)
-        self.image = pygame.transform.scale(Bomb.image, (Bomb.w, Bomb.h))
-        self.image_boom = pygame.transform.scale(Bomb.image_boom, (Bomb.w, Bomb.h))
         self.rect = self.image.get_rect()
-        self.rect.x = random.randrange(WINDOW_WIDTH-Bomb.w)
-        self.rect.y = random.randrange(WINDOW_HEIGHT-Bomb.h)
+        self.rect.x = -self.rect.width
+        self.rect.y = 0
+        self.speed = 200
+        self.moving = True
 
-    def update(self, *args):
-        self.rect = self.rect.move(random.randrange(3) - 1,
-                                   random.randrange(3) - 1)
-        if args and args[0].type == pygame.MOUSEBUTTONDOWN and \
-                self.rect.collidepoint(args[0].pos):
-            self.image = self.image_boom
+    def update(self, e):
+        if self.moving:
+            s = int(self.speed * e)
+            if self.rect.x < 0:
+                self.rect.move_ip([s, 0])
+            else:
+                self.rect.x = 0
+                self.moving = False
 
 
 def main():
-    bg = pygame.Color('white')
+
+    bg = pygame.Color('blue')
     clock = pygame.time.Clock()
 
     all_sprites = pygame.sprite.Group()
-    for _ in range(20):
-        Bomb(all_sprites)
+    gameover = GameOver(all_sprites)
 
     running = True
     while running:
@@ -72,9 +73,10 @@ def main():
 
         screen.fill(bg)
         all_sprites.draw(screen)
-        all_sprites.update()
+        e = float(clock.tick(FPS) / 1000.0)
+        all_sprites.update(e)
         pygame.display.flip()
-        clock.tick(30)
+
     pygame.display.quit()
 
 
