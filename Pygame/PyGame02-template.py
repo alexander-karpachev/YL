@@ -2,10 +2,12 @@ import pygame
 
 
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
+FPS = 30
 
 
 def main():
     pygame.init()
+    clock = pygame.time.Clock()
     screen = pygame.display.set_mode(WINDOW_SIZE)
     bg = pygame.Color('black')
 
@@ -19,6 +21,7 @@ def main():
             break
 
         screen.fill(bg)
+        clock.tick(FPS)
         pygame.display.flip()
     pygame.display.quit()
 
