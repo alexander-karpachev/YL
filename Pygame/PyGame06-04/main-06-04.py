@@ -5,6 +5,7 @@ import pygame, os, sys
 
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 500, 500
 DATA_DIR = 'data'
+FPS = 30
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -46,10 +47,10 @@ class Bomb(pygame.sprite.Sprite):
         self.image_boom = pygame.transform.scale(Bomb.image_boom, (Bomb.w, Bomb.h))
         self.rect = self.image.get_rect()
 
-        #gi = [x for x in group if x != self]
-        while pygame.sprite.spritecollideany(self, group):
-            self.rect.x = random.randrange(WINDOW_WIDTH-Bomb.w)
-            self.rect.y = random.randrange(WINDOW_HEIGHT-Bomb.h)
+        gi = [x for x in group if x != self]
+        while pygame.sprite.spritecollideany(self, gi):
+            self.rect.x = random.randrange(Bomb.w, WINDOW_WIDTH-Bomb.w)
+            self.rect.y = random.randrange(Bomb.h, WINDOW_HEIGHT-Bomb.h)
 
     def update(self, *args):
         self.rect = self.rect.move(random.randrange(3) - 1,
@@ -83,7 +84,7 @@ def main():
         all_sprites.draw(screen)
         all_sprites.update()
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(FPS)
     pygame.display.quit()
 
 
