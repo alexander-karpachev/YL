@@ -28,18 +28,18 @@ class Ball(pygame.sprite.Sprite):
         if pygame.sprite.spritecollideany(self, gh):
             self.vy = -self.vy
             if self.rect.y < self.r:
-                self.rect.y = self.r + 1
+                self.rect.y = self.r
                 self.vy = abs(self.vy)
             if self.rect.y > WINDOW_HEIGHT - self.r:
-                self.rect.y = WINDOW_HEIGHT - self.r - 1
+                self.rect.y = WINDOW_HEIGHT - self.r
                 self.vy = -abs(self.vy)
         if pygame.sprite.spritecollideany(self, gv):
             self.vx = -self.vx
             if self.rect.x < self.r:
-                self.rect.x = self.r + 1
+                self.rect.x = self.r
                 self.vx = abs(self.vx)
             if self.rect.x > WINDOW_WIDTH - self.r:
-                self.rect.x = WINDOW_WIDTH - self.r - 1
+                self.rect.x = WINDOW_WIDTH - self.r
                 self.vx = abs(self.vx)
         self.rect = self.rect.move(self.vx, self.vy)
 
