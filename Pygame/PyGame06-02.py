@@ -1,16 +1,15 @@
 import pygame
-import math
+
 
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
 FPS = 30
 
-r1 = [(-20, 10), 150]
-r2 = [((WINDOW_WIDTH - 200) // 2, (WINDOW_HEIGHT - 150) // 2), 80]
+r1 = pygame.Rect((-20, 10, 200, 120))
+r2 = pygame.Rect(((WINDOW_WIDTH - 200) // 2, (WINDOW_HEIGHT - 150) // 2, 200, 150))
 
 
-def intercect(c1, c2):
-    l = math.hypot(c1[0][0]-c2[0][0], c1[0][1]-c2[0][1])
-    if l > c1[1] + c2[1]:
+def intercect(r1, r2):
+    if (r1[0] + r1[2] < r2[0] or r2[0] + r2[2] < r1[0]) or (r1[1] + r1[3] < r2[1] or r2[1] + r2[3] < r1[1]):
         return False
     return True
 
@@ -31,7 +30,7 @@ def main():
                 running = False
                 break
             if event.type == pygame.MOUSEMOTION:
-                r1[0] = event.pos
+                r1.left, r1.top = event.pos
         if not running:
             break
 
@@ -40,9 +39,9 @@ def main():
 
         screen.fill(bg)
 
-        pygame.draw.circle(screen, c1, r1[0], r1[1], 2)
-        pygame.draw.circle(screen, c2, r2[0], r2[1], 2)
-        pygame.draw.line(screen, c3, r1[0], r2[0], 2)
+        pygame.draw.rect(screen, c1, r1, 2)
+        pygame.draw.rect(screen, c2, r2, 2)
+        pygame.draw.line(screen, c3, (r1.centerx, r1.centery),(r2.centerx, r2.centery), 2)
 
         clock.tick(FPS)
         pygame.display.flip()
