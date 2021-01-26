@@ -1,5 +1,4 @@
-import math
-import random
+import enum
 
 import pygame
 
@@ -7,69 +6,58 @@ import pygame
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
 FPS = 30
 
-class Colors:
+
+class Colors(enum.Enum):
     hero = blue = pygame.Color('blue')
     platform = gray = pygame.Color('gray')
+    bg = black = pygame.Color('black')
 
 
 class Hero(pygame.sprite.Sprite):
     def __init__(self, group):
         super().__init__(group)
-        self.w = self.h = 20
-        self.x = self.y = 0
+        self.active = False
         self.image = pygame.Surface(self.w, self.h)
-        pygame.draw.rect(self.image, Colors.hero.value, (self.x, self.y), self.w, self.h, 0)
+        self.rect = self.image.get_rect()
+        pygame.draw.rect(self.image, Colors.hero.value, self.rect, 0)
 
-
-    def update(self, group):
+    def update(self, group, event, time):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if not self.active:
+                self.active = True
+            self.rect.left, self.rect.top = event.pos
+        if not self.active:
+            return
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                self.rect.left -= 10.0 * time
+            elif event.key == pygame.K_RIGHT:
+                self.rect.left += 10.0 * time
         if not pygame.sprite.spritecollideany(self, group):
-            self.image.
+            self.rect.top += round(10.0 * time)
+        #c = [b for b in pygame.sprite.spritecollide(self, gb, False) if b.id != self.id]
 
-        c = [b for b in pygame.sprite.spritecollide(self, gb, False) if b.id != self.id]
 
-
-class Border(pygame.sprite.Sprite):
+class Platform(pygame.sprite.Sprite):
     # строго вертикальный или строго горизонтальный отрезок
-    def __init__(self, group, gv, gh, x1, y1, x2, y2):
+    def __init__(self, group, gv, event):
         super().__init__(group)
-        if x1 == x2:  # вертикальная стенка
-            self.add_vertical(gv, x1, y1, x2, y2)
-        else:
-            self.add_horizontal(gh, x1, y1, x2, y2)
-
-    def add_vertical(self, g, x1, y1, x2, y2):
-            self.add(g)
-            self.image = pygame.Surface([1, y2 - y1])
-            self.rect = pygame.Rect(x1, y1, 1, y2 - y1)
-
-    def add_horizontal(self, g, x1, y1, x2, y2):
-            self.add(g)
-            self.image = pygame.Surface([x2 - x1, 1])
-            self.rect = pygame.Rect(x1, y1, x2 - x1, 1)
+        self.add(gv)
+        self.image = pygame.Surface((50, 10))
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = event.pos
+        pygame.draw.rect(self.image, Colors.platform.value, self.rect, 0)
+        print('Add platform')
 
 
 def main():
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(WINDOW_SIZE)
-    bg = pygame.Color('white')
+    bg = Colors.black.value
 
     all_sprites = pygame.sprite.Group()
-    balls = pygame.sprite.Group()
-    horizontal_borders = pygame.sprite.Group()
-    vertical_borders = pygame.sprite.Group()
-
-    Border(all_sprites, vertical_borders, horizontal_borders,
-           5, 5, WINDOW_WIDTH - 5, 5)
-    Border(all_sprites, vertical_borders, horizontal_borders,
-           5, WINDOW_HEIGHT - 5, WINDOW_WIDTH - 5, WINDOW_HEIGHT - 5)
-    Border(all_sprites, vertical_borders, horizontal_borders,
-           5, 5, 5, WINDOW_HEIGHT - 5)
-    Border(all_sprites, vertical_borders, horizontal_borders,
-           WINDOW_WIDTH - 5, 5, WINDOW_WIDTH - 5, WINDOW_HEIGHT - 5)
-
-    for i in range(20):
-        Ball(all_sprites, balls, 20, 100, 100)
+    platforms = pygame.sprite.Group()
 
     running = True
     while running:
@@ -77,14 +65,21 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
                 break
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    Platform(all_sprites, platforms, event)
+                elif event.button == 2:
+                    t = clock.tick(FPS) / 1000.0
+                    all_sprites.update(all_sprites, platforms, event, t)
+
         if not running:
             break
 
         screen.fill(bg)
         clock.tick(FPS)
         all_sprites.draw(screen)
+        platforms.draw(screen)
         pygame.display.flip()
-        all_sprites.update(all_sprites, balls, vertical_borders, horizontal_borders)
     pygame.display.quit()
 
 
