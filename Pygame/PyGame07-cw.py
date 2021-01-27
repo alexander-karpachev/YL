@@ -92,7 +92,8 @@ class Tile(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(player_group, all_sprites)
+        super().__init__(player_group)
+        self.
         self.image = player_image
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 15, tile_height * pos_y + 5)
@@ -100,12 +101,16 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, pos):
         old_pos = self.pos
+        old_rect = self.rect
         self.pos = self.pos[0] + pos[0], self.pos[1] + pos[1]
         self.rect = self.image.get_rect().move(
             tile_width * self.pos[0] + 15, tile_height * self.pos[1] + 5)
         c = pygame.sprite.groupcollide(player_group, tiles_group, False, False)
-        t = Tile()
-        print(c[self][0])
+        if c[self][0].type == 'wall':
+            self.rect = old_rect
+            self.pos = old_pos
+        print(self.pos)
+        print(self.rect)
 
     def action(self, event):
         if event.type == pygame.KEYDOWN:
@@ -159,6 +164,7 @@ def main():
         screen.fill(bg)
         if playing:
             all_sprites.draw(screen)
+            player_group.draw(screen)
         else:
             start_screen(screen)
         clock.tick(FPS)
