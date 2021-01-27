@@ -87,19 +87,25 @@ class Tile(pygame.sprite.Sprite):
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
+        self.type = tile_type
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
+        super().__init__(player_group, all_sprites)
         self.image = player_image
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 15, tile_height * pos_y + 5)
         self.pos = (pos_x, pos_y)
 
     def move(self, pos):
+        old_pos = self.pos
         self.pos = self.pos[0] + pos[0], self.pos[1] + pos[1]
         self.rect = self.image.get_rect().move(
             tile_width * self.pos[0] + 15, tile_height * self.pos[1] + 5)
+        c = pygame.sprite.groupcollide(player_group, tiles_group, False, False)
+        t = Tile()
+        print(c[self][0])
 
     def action(self, event):
         if event.type == pygame.KEYDOWN:
@@ -133,31 +139,10 @@ def generate_level(level):
     return new_player, x, y
 
 
-class Camera:
-    # зададим начальный сдвиг камеры
-    def __init__(self):
-        self.dx = 0
-        self.dy = 0
-
-    # сдвинуть объект obj на смещение камеры
-    def apply(self, obj):
-        obj.rect.x += self.dx
-        obj.rect.y += self.dy
-
-    # позиционировать камеру на объекте target
-    def update(self, target):
-        self.dx = -(target.rect.x + target.rect.w // 2 - WINDOW_WIDTH // 2)
-        self.dy = -(target.rect.y + target.rect.h // 2 - WINDOW_HEIGHT // 2)
-
-
 def main():
     bg = pygame.Color('black')
 
     player, level_x, level_y = generate_level(load_level('level1.dat'))
-    camera = Camera()
-    camera.update(player)
-    for sprite in all_sprites:
-        camera.apply(sprite)
 
     playing = False
     running = True
