@@ -109,8 +109,6 @@ class Player(pygame.sprite.Sprite):
         if c[self][0].type == 'wall':
             self.rect = old_rect
             self.pos = old_pos
-        print(self.pos)
-        print(self.rect)
 
     def action(self, event):
         if event.type == pygame.KEYDOWN:
