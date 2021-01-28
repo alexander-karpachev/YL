@@ -1,6 +1,5 @@
 import os
 import sys
-
 import pygame
 
 
@@ -42,6 +41,7 @@ def terminate():
 def start_screen(s):
     intro_text = ["ЗАСТАВКА", "",
                   "Правила игры",
+                  "Для запуска игры нажмите клавишу <Пробел>",
                   "Если в правилах несколько строк,",
                   "приходится выводить их построчно"]
 
@@ -93,7 +93,6 @@ class Tile(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group)
-        self.
         self.image = player_image
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 15, tile_height * pos_y + 5)
