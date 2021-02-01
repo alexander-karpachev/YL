@@ -182,6 +182,7 @@ def main():
     for sprite in all_sprites:
         camera.apply(sprite)
 
+    reset_cam = True
     playing = False
     running = True
     while running:
@@ -192,12 +193,13 @@ def main():
                 if event.key == pygame.K_SPACE:
                     playing = not playing
                 else:
-                    if player.action(event):
-                        # изменяем ракурс камеры
-                        camera.update(player)
-                        # обновляем положение всех спрайтов
-                        for sprite in all_sprites:
-                            camera.apply(sprite)
+                    reset_cam = player.action(event)
+        if reset_cam:
+            # изменяем ракурс камеры
+            camera.update(player)
+            # обновляем положение всех спрайтов
+            for sprite in all_sprites:
+                camera.apply(sprite)
         clock.tick(FPS)
         screen.fill(bg)
         if playing:
