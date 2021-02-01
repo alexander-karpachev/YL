@@ -144,7 +144,7 @@ def generate_level(level):
 def main():
     bg = pygame.Color('black')
 
-    player, level_x, level_y = generate_level(load_level('level1.dat'))
+    player, level_x, level_y = generate_level(load_level('level4.dat'))
 
     playing = False
     running = True
