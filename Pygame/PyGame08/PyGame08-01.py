@@ -1,5 +1,7 @@
 import random
 
+import arcade
+
 import pygame, sys, os
 
 
@@ -38,12 +40,12 @@ GRAVITY = 1
 
 class Particle(pygame.sprite.Sprite):
     # сгенерируем частицы разного размера
-    fire = [load_image("star.png")]
-    for scale in (5, 10, 20):
-        fire.append(pygame.transform.scale(fire[0], (scale, scale)))
 
-    def __init__(self, pos, dx, dy):
+    def __init__(self, img, pos, dx, dy):
         super().__init__(all_sprites)
+        self.fire = [img]
+        for scale in (5, 10, 20):
+            self.fire.append(pygame.transform.scale(self.fire[0], (scale, scale)))
         self.image = random.choice(self.fire)
         self.rect = self.image.get_rect()
 
@@ -73,7 +75,7 @@ def create_particles(position):
     # возможные скорости
     numbers = range(-5, 6)
     for _ in range(particle_count):
-        Particle(position, random.choice(numbers), random.choice(numbers))
+        Particle(load_image("star.png"), position, random.choice(numbers), random.choice(numbers))
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
@@ -103,7 +105,7 @@ def main():
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(WINDOW_SIZE)
-    bg = pygame.Color('white')
+    bg = pygame.Color('black')
 
     dragon = AnimatedSprite(load_image("walking-character.png", -1), 6, 4, 93, 160)
     dragon_cnt = 0
@@ -116,15 +118,14 @@ def main():
         if not running:
             break
 
-        if dragon_cnt > 2:
+        if dragon_cnt > 5:
             dragon_cnt = 0
             dragon.update()
-            particle_x = random.randint(100, WINDOW_WIDTH-100)
-            particle_y = random.randint(100, WINDOW_HEIGHT-100)
+            particle_x = random.randint(100, WINDOW_WIDTH-10)
+            particle_y = random.randint(10, WINDOW_HEIGHT//2)
             create_particles((particle_x, particle_y))
         dragon_cnt += 1
-
-
+        all_sprites.update()
 
         screen.fill(bg)
         all_sprites.draw(screen)
