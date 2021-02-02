@@ -55,9 +55,9 @@ def main():
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(WINDOW_SIZE)
-    bg = pygame.Color('black')
+    bg = pygame.Color('white')
 
-    dragon = AnimatedSprite(load_image("dragon_sheet8x2.png"), 8, 2, 50, 50)
+    dragon = AnimatedSprite(load_image("walking-character.png", -1), 6, 4, 93, 160)
     dragon_cnt = 0
 
     running = True
@@ -68,7 +68,7 @@ def main():
         if not running:
             break
 
-        if dragon_cnt > 5:
+        if dragon_cnt > 2:
             dragon_cnt = 0
             dragon.update()
         dragon_cnt += 1
