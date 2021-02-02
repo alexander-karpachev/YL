@@ -3,6 +3,31 @@ import pygame, sys, os
 
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
 FPS = 30
+all_sprites = pygame.sprite.Group()
+
+
+class AnimatedSprite(pygame.sprite.Sprite):
+    def __init__(self, sheet, columns, rows, x, y):
+        super().__init__(all_sprites)
+        self.frames = []
+        self.cut_sheet(sheet, columns, rows)
+        self.cur_frame = 0
+        self.image = self.frames[self.cur_frame]
+        self.rect = self.rect.move(x, y)
+
+    def cut_sheet(self, sheet, columns, rows):
+        self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
+                                sheet.get_height() // rows)
+        for j in range(rows):
+            for i in range(columns):
+                frame_location = (self.rect.w * i, self.rect.h * j)
+                self.frames.append(sheet.subsurface(pygame.Rect(
+                    frame_location, self.rect.size)))
+
+    def update(self):
+        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
+        self.image = self.frames[self.cur_frame]
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -32,6 +57,9 @@ def main():
     screen = pygame.display.set_mode(WINDOW_SIZE)
     bg = pygame.Color('black')
 
+    dragon = AnimatedSprite(load_image("dragon_sheet8x2.png"), 8, 2, 50, 50)
+    dragon_cnt = 0
+
     running = True
     while running:
         for event in pygame.event.get():
@@ -40,7 +68,13 @@ def main():
         if not running:
             break
 
+        if dragon_cnt > 5:
+            dragon_cnt = 0
+            dragon.update()
+        dragon_cnt += 1
+
         screen.fill(bg)
+        all_sprites.draw(screen)
         clock.tick(FPS)
         pygame.display.flip()
     pygame.display.quit()
