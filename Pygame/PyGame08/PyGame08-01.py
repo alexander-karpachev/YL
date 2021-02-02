@@ -1,9 +1,7 @@
 import random
-
-import arcade
-
-import pygame, sys, os
-
+import pygame
+import sys
+import os
 
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
 FPS = 30
