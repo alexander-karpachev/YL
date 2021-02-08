@@ -1,19 +1,9 @@
 def reversed_linked_list(head):
-    print(id(head))
     if not head or not head.next:
         return
     curr, head.next = head.next, None
-
-    print('Head', head.getlist())
-    print('Current', curr.getlist())
-
-    head, head.next, curr = curr, head, curr.next
-
     while curr:
         head, head.next, curr = curr, head, curr.next
-        print('>Head', head.getlist())
-        if curr:
-            print('Current', curr.getlist())
     return head
 
 
