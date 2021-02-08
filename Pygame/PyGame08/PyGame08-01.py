@@ -33,7 +33,7 @@ def terminate():
 # для отслеживания улетевших частиц
 # удобно использовать пересечение прямоугольников
 screen_rect = (0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
-GRAVITY = 1
+GRAVITY = 0.5
 
 
 class Particle(pygame.sprite.Sprite):
@@ -42,7 +42,7 @@ class Particle(pygame.sprite.Sprite):
     def __init__(self, img, pos, dx, dy):
         super().__init__(all_sprites)
         self.fire = [img]
-        for scale in (5, 10, 20):
+        for scale in (3, 5, 7):
             self.fire.append(pygame.transform.scale(self.fire[0], (scale, scale)))
         self.image = random.choice(self.fire)
         self.rect = self.image.get_rect()
@@ -71,7 +71,7 @@ def create_particles(position):
     # количество создаваемых частиц
     particle_count = 20
     # возможные скорости
-    numbers = range(-5, 6)
+    numbers = range(-5, 4)
     for _ in range(particle_count):
         Particle(load_image("star.png"), position, random.choice(numbers), random.choice(numbers))
 

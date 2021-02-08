@@ -26,35 +26,36 @@ blocks = [
     }
 ]
 
+
 reqs = ['gym', 'school', 'store']
 
-
-def search(blocks, reqs, index, step, acc=0):
-    # check if index is valid
-    if index < 0 or index > len(blocks)-1 or len(reqs) == 0:
-        print(f'Stopped index={index}')
-        return 0
-    print(f'Continue on index={index}, req={reqs}, acc={acc}')
-
-    # check is some of reqs in block
-    new_reqs = []
-    for i in reqs:
-        if not blocks[index].get(i):
-            new_reqs.append(i)
-        else:
-            acc += 1
-
-    if len(new_reqs) == 0:
-        return acc
-    r = search(blocks, new_reqs, index+step, 1, acc)
-    return r
+# Lets try calc it for one middle block for one req
+# 0 1 2 3 4
+# F T T F F
+# 0: 1++ till T
+block_id = 3
+req = reqs[0]
 
 
-d = []
+def dist(blocks, index, req):
+    if blocks[index].get(req):
+        return [0, 0]
+    acc_lr = 1000
+    for i in range(index+1, len(blocks)):
+        if blocks[i].get(req):
+            acc_lr = i - index
+            break
+
+    acc_ll = 1000
+    for i in range(index, -1, -1):
+        if blocks[i].get(req):
+            acc_ll = index - i
+            break
+
+    return min([acc_ll, acc_lr])
+
+
 for i in range(len(blocks)):
-    print(f'----------------> block == {i}')
-    x = search(blocks, reqs, 0, 1) + search(blocks, reqs, -1, 1)
-    print(f'----------------> block == {i}, acc={x}')
-    d.append(x)
+    for r in reqs:
+        print(r, dist(blocks, 1, r))
 
-print(d)
