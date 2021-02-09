@@ -39,7 +39,7 @@ req = reqs[0]
 
 def dist(blocks, index, req):
     if blocks[index].get(req):
-        return [0, 0]
+        return 0
     acc_lr = 1000
     for i in range(index+1, len(blocks)):
         if blocks[i].get(req):
@@ -52,10 +52,23 @@ def dist(blocks, index, req):
             acc_ll = index - i
             break
 
-    return min([acc_ll, acc_lr])
+    return min(acc_ll, acc_lr)
 
 
+d = []
+for r in reqs:
+    print([int(not b.get(r)) for b in blocks])
+
+
+min_acc = 1000
+min_id = 0
 for i in range(len(blocks)):
+    acc = []
+    print(f'BLOCK {i} ----------')
     for r in reqs:
-        print(r, dist(blocks, 1, r))
+        d.append(dist(blocks, i, r))
+        #acc += d
+    print('  ', reqs, d, max(d), acc)
+    d.clear()
 
+# print(min_id)
