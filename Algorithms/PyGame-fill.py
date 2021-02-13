@@ -145,13 +145,13 @@ def fill(b, r, c):
         return
     if board[r][c] != 0:
         return
-    #print(r, c, board[r][c])
+    print(r, c, board[r][c])
     board[r][c] = 2
     screen.fill(GameColors.cell_color.value[0])
     b.render(screen)
     clock.tick(FPS)
     pygame.display.flip()
-    #sleep(0.005)
+    sleep(0.1)
     fill(b, r + 1, c)
     fill(b, r, c - 1)
     fill(b, r - 1, c)
