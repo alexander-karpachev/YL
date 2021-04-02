@@ -189,7 +189,7 @@ class Lines(Board):
             while c2 != c1:
                 p.insert(0, c2)
                 v += 1
-                c2 = [(x, y) for x, y in self.neighbours4(c2) if board[x][y] == v][0]
+                c2 = [(x, y) for x, y in self.neighbours4(c2) if board[x][y] == v]
             self.path = p
         return found
 

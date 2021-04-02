@@ -1,3 +1,6 @@
+import os
+
+
 def human_read_format(size):
     d = {
         0: 'Б',
@@ -14,3 +17,15 @@ def human_read_format(size):
         divisor = (1024 ** n)
     r = round(size / divisor)
     return str(r) + d.get(n)
+
+
+def get_files_sizes(dir):
+    os.chdir(dir)
+    r = list()
+    for f in os.listdir():
+        if os.path.isfile(f):
+            full_name = dir+'\\'+f
+            size = os.stat(full_name).st_size
+            r.append([full_name, human_read_format(size)])
+    return r
+
