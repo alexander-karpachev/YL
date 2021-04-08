@@ -1,0 +1,8 @@
+# from bites to KB, MB, GB, TB ...
+def human_read_format(size):
+    s = size // 1023
+    return str(s)+'Б'
+
+
+print(human_read_format(1023))
+print(human_read_format(15000))

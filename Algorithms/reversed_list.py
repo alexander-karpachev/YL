@@ -39,6 +39,13 @@ a.add(5)
 print(id(a))
 a = reversed_linked_list(a)
 
+# 1. lets check what's going on
+# 2. ... goes goes to sleep !!!
+# 3 FAST !!!!!
+
+
+
+
 print('---------------------------------')
 print(id(a))
 print(a.getlist())

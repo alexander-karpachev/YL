@@ -1,9 +1,9 @@
-def quicksort(arr, left, right):
+def quick_sort(arr, left, right):
     if left >= right:
         return
     center = part(arr, left, right)
-    quicksort(arr, left, center - 1)
-    quicksort(arr, center + 1, right)
+    quick_sort(arr, left, center - 1)
+    quick_sort(arr, center + 1, right)
 
 
 def part(arr, left, right):
@@ -14,8 +14,6 @@ def part(arr, left, right):
             i += 1
             a[i], a[j] = a[j], a[i]
     return i
-
-
 
 
 def insertion_sort(array):
@@ -30,9 +28,10 @@ def insertion_sort(array):
 
 a = [10, 0, 1, 9, 3, 4, 5, 7, 6]
 
-#print(a)
-#insertion_sort(a)
-#print(a)
+# print(a)
+# insertion_sort(a)
+# print(a)
+
 print(a)
 quicksort(a, 0, len(a)-1)
 print(a)
