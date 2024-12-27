@@ -5,17 +5,17 @@ import pygame
 
 
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
-FPS = 60
+FPS = 30
 LIFE_TIMER_EVENT_TYPE = 30
 
 
 class GameColors(enum.Enum):
-    border = white = pygame.Color('white')
+    border = white = pygame.Color('gray')
     background = black = pygame.Color('black')
 
     cell_color = [
         pygame.Color('black'),
-        pygame.Color('gray'),
+        pygame.Color('yellow'),
     ]
 
 
